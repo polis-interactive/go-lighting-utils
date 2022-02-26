@@ -15,6 +15,8 @@ type ShaderIdentifier struct {
 	Filename string
 }
 
+type ShaderIdentifiers []ShaderIdentifier
+
 type UniformKey string
 
 type UniformDict map[UniformKey]float32
@@ -104,6 +106,16 @@ func (gs *GraphicsShader) AttachShader(id ShaderIdentifier) error {
 		gs.currentShader = id.Key
 	}
 	gs.programs[id.Key] = p
+	return nil
+}
+
+func (gs *GraphicsShader) AttachShaders(si ShaderIdentifiers) error {
+	for _, s := range si {
+		err := gs.AttachShader(s)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
