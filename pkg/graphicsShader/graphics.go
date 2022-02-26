@@ -136,7 +136,7 @@ func (gs *GraphicsShader) ReloadShader() error {
 	if !ok {
 		return errors.New(fmt.Sprintf("couldn't find shader with key %s", gs.currentShader))
 	}
-	return p.loadShaders()
+	return p.reloadShaders()
 }
 
 func (gs *GraphicsShader) RunShader() error {

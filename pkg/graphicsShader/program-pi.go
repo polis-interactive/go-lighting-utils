@@ -51,6 +51,12 @@ func (p *program) loadShaders() error {
 	return nil
 }
 
+func (p *program) reloadShaders() error {
+	p.delete()
+	p.handle = gles2.CreateProgram()
+	return p.loadShaders()
+}
+
 func (p *program) attach(shaders ...shader) {
 	for _, s := range shaders {
 		gles2.AttachShader(p.handle, s.handle)

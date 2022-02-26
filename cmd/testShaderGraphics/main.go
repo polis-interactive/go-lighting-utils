@@ -101,7 +101,13 @@ func (sr *shaderRunner) doRunShader() {
 
 	duration := time.Since(sr.startTime)
 	sr.ud["time"] = float32(duration.Seconds())
-	err := sr.gs.RunShader()
+
+	err := sr.gs.ReloadShader()
+	if err != nil {
+		panic(err)
+	}
+
+	err = sr.gs.RunShader()
 	if err != nil {
 		log.Println(err)
 		panic(err)
