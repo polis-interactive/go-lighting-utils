@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
 func checkProgramPath(programName string) error {
-	_, b, _, _ := runtime.Caller(0)
-	basePath := filepath.Dir(b)
+	basePath, err := os.Getwd()
+	if err != nil {
+		return errors.New("COULDN'T GET CWD")
+	}
 	if !strings.Contains(basePath, programName) {
 		return errors.New(fmt.Sprintf("PATH DOES NOT INCLUDE PROGRAM %s", programName))
 	}
@@ -19,8 +20,10 @@ func checkProgramPath(programName string) error {
 }
 
 func getQualifiedShaderPath(programName string, shaderName string) (string, error) {
-	_, b, _, _ := runtime.Caller(0)
-	basePath := filepath.Dir(b)
+	basePath, err := os.Getwd()
+	if err != nil {
+		return "", errors.New("COULDN'T GET CWD")
+	}
 	dataPath := strings.Split(basePath, programName)[0]
 	dataPath = filepath.Join(dataPath, programName, "data", shaderName)
 	fragPath := dataPath + ".frag"
