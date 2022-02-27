@@ -74,7 +74,7 @@ func (p *program) use() {
 	gles2.UseProgram(p.handle)
 }
 
-func (p *program) setUniform1f(name string, value float32) {
+func (p *program) setUniform1f(name UniformKey, value float32) {
 	chars := []uint8(name)
 	loc := gles2.GetUniformLocation(p.handle, &chars[0])
 	if loc == -1 {

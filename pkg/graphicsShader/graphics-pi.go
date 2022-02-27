@@ -10,6 +10,10 @@ import (
 	"unsafe"
 )
 
+func glInit() error {
+	return gles2.Init()
+}
+
 func createFillRect() uint32 {
 
 	vertices := []float32{
@@ -64,6 +68,11 @@ func createFillRect() uint32 {
 	// should probably check for an error here, not sure what tho
 
 	return VAO
+}
+
+func (gs *GraphicsShader) ClearBuffer() {
+	gles2.ClearColor(0.2, 0.2, 0.2, 1.0)
+	gles2.Clear(gl.COLOR_BUFFER_BIT)
 }
 
 func (gs *GraphicsShader) ReadToPixels(pb unsafe.Pointer) error {
