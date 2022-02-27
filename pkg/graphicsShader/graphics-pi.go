@@ -72,7 +72,7 @@ func createFillRect() uint32 {
 
 func (gs *GraphicsShader) ClearBuffer() {
 	gles2.ClearColor(0.2, 0.2, 0.2, 1.0)
-	gles2.Clear(gl.COLOR_BUFFER_BIT)
+	gles2.Clear(gles2.COLOR_BUFFER_BIT)
 }
 
 func (gs *GraphicsShader) ReadToPixels(pb unsafe.Pointer) error {
