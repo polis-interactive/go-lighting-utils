@@ -22,7 +22,7 @@ type UniformKey string
 type UniformDict map[UniformKey]float32
 
 type GraphicsShader struct {
-	programName   string
+	shaderPath    string
 	width         int32
 	widthF        float32
 	height        int32
@@ -40,7 +40,7 @@ func NewGraphicsShader(
 	uniformDict UniformDict, mu *sync.RWMutex,
 ) (*GraphicsShader, error) {
 
-	err := checkProgramPath(programName)
+	p, err := GetShaderPathIfAvailable(programName)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func NewGraphicsShader(
 	runtime.LockOSThread()
 
 	gs := &GraphicsShader{
-		programName:   programName,
+		shaderPath:    p,
 		width:         width,
 		widthF:        float32(width),
 		height:        height,
@@ -94,7 +94,7 @@ func (gs *GraphicsShader) AttachShader(id ShaderIdentifier) error {
 	if _, ok := gs.programs[id.Key]; ok {
 		return errors.New(fmt.Sprintf("shader with key %s already exists", id.Key))
 	}
-	qualifiedPath, err := getQualifiedShaderPath(gs.programName, id.Filename)
+	qualifiedPath, err := GetQualifiedShaderPath(gs.shaderPath, id.Filename)
 	if err != nil {
 		return err
 	}
