@@ -110,7 +110,8 @@ func (gs *GraphicsShader) AttachShaders(si ShaderIdentifiers) error {
 }
 
 func (gs *GraphicsShader) SetShader(key ShaderKey) error {
-	// might need to lock here
+	gs.mu.Lock()
+	defer gs.mu.Unlock()
 	if _, ok := gs.programs[key]; !ok {
 		return errors.New(fmt.Sprintf("couldn't find shader with key %s", key))
 	}
@@ -119,6 +120,8 @@ func (gs *GraphicsShader) SetShader(key ShaderKey) error {
 }
 
 func (gs *GraphicsShader) ReloadShader() error {
+	gs.mu.RLock()
+	defer gs.mu.RUnlock()
 	if gs.currentShader == "" {
 		return errors.New("nothing to reload")
 	}
@@ -130,6 +133,9 @@ func (gs *GraphicsShader) ReloadShader() error {
 }
 
 func (gs *GraphicsShader) RunShader() error {
+
+	gs.mu.RLock()
+	defer gs.mu.RUnlock()
 
 	glfwPollEvents()
 	gs.ClearBuffer()
