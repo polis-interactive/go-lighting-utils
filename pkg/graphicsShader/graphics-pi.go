@@ -76,6 +76,8 @@ func (gs *GraphicsShader) ClearBuffer() {
 }
 
 func (gs *GraphicsShader) ReadToPixels(pb unsafe.Pointer) error {
+	gs.mu.Lock()
+	defer gs.mu.Unlock()
 	gles2.ReadPixels(0, 0, gs.width, gs.height, gles2.RGBA, gles2.UNSIGNED_BYTE, pb)
 	// should probably check for error
 	return nil
