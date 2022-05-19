@@ -36,20 +36,15 @@ type GraphicsShader struct {
 }
 
 func NewGraphicsShader(
-	programName string, width int32, height int32,
+	shaderPath string, width int32, height int32,
 	uniformDict UniformDict, mu *sync.RWMutex,
 ) (*GraphicsShader, error) {
-
-	p, err := GetShaderPathIfAvailable(programName)
-	if err != nil {
-		return nil, err
-	}
 
 	// required by glfw
 	runtime.LockOSThread()
 
 	gs := &GraphicsShader{
-		shaderPath:    p,
+		shaderPath:    shaderPath,
 		width:         width,
 		widthF:        float32(width),
 		height:        height,
@@ -60,7 +55,7 @@ func NewGraphicsShader(
 		currentShader: "",
 	}
 
-	err = glfwInit()
+	err := glfwInit()
 	if err != nil {
 		gs.Cleanup()
 		log.Fatalln("failed to initialize glfw:", err)

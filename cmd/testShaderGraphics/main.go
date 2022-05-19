@@ -63,8 +63,12 @@ func (sr *shaderRunner) runShader() {
 }
 
 func (sr *shaderRunner) setupShader() {
+	p, err := graphicsShader.GetShaderPathIfAvailable("lighting-utils")
+	if err != nil {
+		panic(err.Error())
+	}
 	gs, err := graphicsShader.NewGraphicsShader(
-		"lighting-utils", 800, 600, sr.ud, sr.mu,
+		p, 800, 600, sr.ud, sr.mu,
 	)
 	if err != nil {
 		panic(err)
