@@ -10,12 +10,7 @@ import (
 
 type ShaderKey string
 
-type ShaderIdentifier struct {
-	Key      ShaderKey
-	Filename string
-}
-
-type ShaderIdentifiers []ShaderIdentifier
+type ShaderIdentifiers map[ShaderKey]string
 
 type UniformKey string
 
@@ -85,11 +80,11 @@ func NewGraphicsShader(
 	return gs, nil
 }
 
-func (gs *GraphicsShader) AttachShader(id ShaderIdentifier) error {
-	if _, ok := gs.programs[id.Key]; ok {
-		return errors.New(fmt.Sprintf("shader with key %s already exists", id.Key))
+func (gs *GraphicsShader) AttachShader(id ShaderKey, fileName string) error {
+	if _, ok := gs.programs[id]; ok {
+		return errors.New(fmt.Sprintf("shader with key %s already exists", id))
 	}
-	qualifiedPath, err := GetQualifiedShaderPath(gs.shaderPath, id.Filename)
+	qualifiedPath, err := GetQualifiedShaderPath(gs.shaderPath, fileName)
 	if err != nil {
 		return err
 	}
@@ -98,15 +93,15 @@ func (gs *GraphicsShader) AttachShader(id ShaderIdentifier) error {
 		return err
 	}
 	if gs.currentShader == "" {
-		gs.currentShader = id.Key
+		gs.currentShader = id
 	}
-	gs.programs[id.Key] = p
+	gs.programs[id] = p
 	return nil
 }
 
 func (gs *GraphicsShader) AttachShaders(si ShaderIdentifiers) error {
-	for _, s := range si {
-		err := gs.AttachShader(s)
+	for k, v := range si {
+		err := gs.AttachShader(k, v)
 		if err != nil {
 			return err
 		}
